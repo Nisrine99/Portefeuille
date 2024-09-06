@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Agent Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .message, .error {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .message {
+            background-color: #e0ffe0;
+            color: #007f00;
+        }
+
+        .error {
+            background-color: #ffe0e0;
+            color: #ff0000;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .actions form {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dashboard des Transactions</h1>
+    
+    <div th:if="${message}" class="message">
+        <p th:text="${message}"></p>
+    </div>
+    
+    <div th:if="${error}" class="error">
+        <p th:text="${error}"></p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Montant</th>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="transaction : ${transactions}">
+                <td th:text="${transaction.id}"></td>
+                <td th:text="${transaction.amount}"></td>
+                <td th:text="${transaction.date}"></td>
+                <td th:text="${transaction.description}"></td>
+                <td th:text="${transaction.status}"></td>
+                <td class="actions">
+                    <form th:action="@{/agent/confirm}" method="post">
+                        <input type="hidden" name="transactionId" th:value="${transaction.id}"/>
+                        <button type="submit">Confirmer</button>
+                    </form>
+                    
+                    <form th:action="@{/agent/reject}" method="post">
+                        <input type="hidden" name="transactionId" th:value="${transaction.id}"/>
+                        <button type="submit" style="background-color: #ff4d4d;">Rejeter</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
